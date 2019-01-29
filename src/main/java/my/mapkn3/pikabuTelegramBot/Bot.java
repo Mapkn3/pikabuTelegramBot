@@ -16,7 +16,13 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
+        if (updates.get(0).getMessage().getCaption() != null) {
+            if (updates.get(0).getMessage().getCaption().charAt(0) == '#') {
+                isActive = true;
+            }
+        }
         updates.forEach(this::onUpdateReceived);
+        isActive = false;
     }
 
     @Override
@@ -36,6 +42,11 @@ public class Bot extends TelegramLongPollingBot {
             }
             System.out.println("Has photo? " + message.hasPhoto());
             if (message.hasPhoto()) {
+                if (message.getCaption() != null) {
+                    hashtag = message.getText();
+                    isActive = true;
+                    System.out.println("Hashtag change to " + hashtag);
+                }
                 SendPhoto sendPhoto = new SendPhoto();
                 sendPhoto.setChatId(message.getChatId());
                 sendPhoto.setCaption(hashtag);
