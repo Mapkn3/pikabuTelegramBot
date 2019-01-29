@@ -15,21 +15,12 @@ public class Bot extends TelegramLongPollingBot {
             System.out.println("Get message");
             Message message = update.getMessage();
             System.out.println("Has photo? " + message.hasPhoto());
-            System.out.println("Has entities? " + message.hasEntities());
-            if (message.hasPhoto() && message.hasEntities()) {
-                StringBuilder hashtagsBuilder = new StringBuilder();
-                for (MessageEntity messageEntity : message.getEntities()) {
-                    if (messageEntity.getType().equals("hashtag")) {
-                        System.out.println("Find hashtag: " + messageEntity.getText());
-                        hashtagsBuilder.append(messageEntity.getText()).append(" ");
-                    }
-                }
-                String hashtags = hashtagsBuilder.toString().trim();
+            if (message.hasPhoto()) {
                 SendPhoto sendPhoto;
                 for (PhotoSize photoSize : message.getPhoto()) {
                     sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(message.getChatId());
-                    sendPhoto.setCaption(hashtags);
+                    sendPhoto.setCaption(message.getCaption());
                     sendPhoto.setPhoto(photoSize.getFileId());
                     System.out.println("Send photo");
                     execute(sendPhoto);
