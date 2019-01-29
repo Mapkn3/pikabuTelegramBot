@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
     private String hashtag = "";
+    private boolean isActive = false;
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
@@ -23,15 +24,14 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            boolean isDelete = false;
             System.out.println("Get message");
             Message message = update.getMessage();
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
+                    isActive = !hashtag.equals("#стоп");
                     System.out.println("Hashtag change to " + hashtag);
-                    isDelete = true;
                 }
             }
             String text = message.getCaption();
@@ -44,9 +44,10 @@ public class Bot extends TelegramLongPollingBot {
                 sendPhoto.setChatId(message.getChatId());
                 sendPhoto.setCaption(hashtag);
                 sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
-                System.out.println("Send photo");
-                execute(sendPhoto);
-                isDelete = true;
+                if (isActive) {
+                    System.out.println("Send photo");
+                    execute(sendPhoto);
+                }
             }
             System.out.println("Has animation? " + message.hasAnimation());
             if (message.hasAnimation()) {
@@ -54,11 +55,12 @@ public class Bot extends TelegramLongPollingBot {
                 sendAnimation.setChatId(message.getChatId());
                 sendAnimation.setCaption(hashtag);
                 sendAnimation.setAnimation(message.getAnimation().getFileId());
-                System.out.println("Send animation");
-                execute(sendAnimation);
-                isDelete = true;
+                if (isActive) {
+                    System.out.println("Send animation");
+                    execute(sendAnimation);
+                }
             }
-            if (isDelete) {
+            if (isActive) {
                 DeleteMessage deleteMessage = new DeleteMessage();
                 deleteMessage.setChatId(message.getChatId());
                 deleteMessage.setMessageId(message.getMessageId());
