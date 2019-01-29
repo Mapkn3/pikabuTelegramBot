@@ -3,6 +3,7 @@ package my.mapkn3.pikabuTelegramBot;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -22,12 +23,16 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
+            boolean isDelete = false;
             System.out.println("Get message");
             Message message = update.getMessage();
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
-                hashtag = message.getText();
-                System.out.println("Hashtag change to " + hashtag);
+                if (message.getText().charAt(0) == '#') {
+                    hashtag = message.getText();
+                    System.out.println("Hashtag change to " + hashtag);
+                    isDelete = true;
+                }
             }
             String text = message.getCaption();
             if (text != null) {
@@ -41,6 +46,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                 System.out.println("Send photo");
                 execute(sendPhoto);
+                isDelete = true;
             }
             System.out.println("Has animation? " + message.hasAnimation());
             if (message.hasAnimation()) {
@@ -50,6 +56,14 @@ public class Bot extends TelegramLongPollingBot {
                 sendAnimation.setAnimation(message.getAnimation().getFileId());
                 System.out.println("Send animation");
                 execute(sendAnimation);
+                isDelete = true;
+            }
+            if (isDelete) {
+                DeleteMessage deleteMessage = new DeleteMessage();
+                deleteMessage.setChatId(message.getChatId());
+                deleteMessage.setMessageId(message.getMessageId());
+                execute(deleteMessage);
+                System.out.println("Message deleted");
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
