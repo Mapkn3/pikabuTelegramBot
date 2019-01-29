@@ -17,6 +17,15 @@ public class Bot extends TelegramLongPollingBot {
         if (updates.size() > 1) {
             updates.forEach(this::onUpdateReceived);
         }
+        try {
+            Message message = updates.get(0).getMessage();
+            DeleteMessage deleteMessage = new DeleteMessage();
+            deleteMessage.setChatId(message.getChatId());
+            deleteMessage.setMessageId(message.getMessageId());
+            execute(deleteMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -37,10 +46,6 @@ public class Bot extends TelegramLongPollingBot {
                 System.out.println("Send photo");
                 execute(sendPhoto);
             }
-            DeleteMessage deleteMessage = new DeleteMessage();
-            deleteMessage.setChatId(message.getChatId());
-            deleteMessage.setMessageId(message.getMessageId());
-            execute(deleteMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
