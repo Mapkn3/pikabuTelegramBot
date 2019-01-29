@@ -32,6 +32,8 @@ public class Bot extends TelegramLongPollingBot {
                     hashtag = message.getText();
                     isActive = !hashtag.equals("#стоп");
                     System.out.println("Hashtag change to " + hashtag);
+                } else {
+                    isActive = false;
                 }
             }
             String text = message.getCaption();
