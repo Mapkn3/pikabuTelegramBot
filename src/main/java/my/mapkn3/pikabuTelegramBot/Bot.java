@@ -12,11 +12,13 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
+            System.out.println("Get message");
             Message message = update.getMessage();
             if (message.hasPhoto() && message.hasEntities()) {
                 StringBuilder hashtagsBuilder = new StringBuilder();
                 for (MessageEntity messageEntity : message.getEntities()) {
                     if (messageEntity.getType().equals("hashtag")) {
+                        System.out.println("Find hashtag: " + messageEntity.getText());
                         hashtagsBuilder.append(messageEntity.getText()).append(" ");
                     }
                 }
@@ -27,6 +29,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendPhoto.setChatId(message.getChatId());
                     sendPhoto.setCaption(hashtags);
                     sendPhoto.setPhoto(photoSize.getFileId());
+                    System.out.println("Send photo");
                     execute(sendPhoto);
                 }
             }
