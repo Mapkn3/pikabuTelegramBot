@@ -1,1 +1,1 @@
-worker: java -jar target/pikabu-telegram-bot-1.0-SNAPSHOT.jar
+worker: sh target/bin/bot
