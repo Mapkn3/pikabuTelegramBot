@@ -1,8 +1,8 @@
 package my.mapkn3.pikabuTelegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -16,15 +16,6 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdatesReceived(List<Update> updates) {
         if (updates.size() > 1) {
             updates.forEach(this::onUpdateReceived);
-        }
-        try {
-            Message message = updates.get(0).getMessage();
-            DeleteMessage deleteMessage = new DeleteMessage();
-            deleteMessage.setChatId(message.getChatId());
-            deleteMessage.setMessageId(message.getMessageId());
-            execute(deleteMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
         }
     }
 
@@ -45,6 +36,14 @@ public class Bot extends TelegramLongPollingBot {
                 sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                 System.out.println("Send photo");
                 execute(sendPhoto);
+            }
+            if (message.hasAnimation()) {
+                SendAnimation sendAnimation = new SendAnimation();
+                sendAnimation.setChatId(message.getChatId());
+                sendAnimation.setCaption(hashtag);
+                sendAnimation.setAnimation(message.getAnimation().getFileId());
+                System.out.println("Send animation");
+                execute(sendAnimation);
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
