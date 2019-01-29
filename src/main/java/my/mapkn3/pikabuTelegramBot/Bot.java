@@ -7,16 +7,22 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class Bot extends TelegramLongPollingBot {
+    private String hashtag = "";
+
     @Override
     public void onUpdateReceived(Update update) {
         try {
             System.out.println("Get message");
             Message message = update.getMessage();
+            String text = message.getCaption();
+            if (!text.equals("")) {
+                hashtag = text;
+            }
             System.out.println("Has photo? " + message.hasPhoto());
             if (message.hasPhoto()) {
                 SendPhoto sendPhoto = new SendPhoto();
                 sendPhoto.setChatId(message.getChatId());
-                sendPhoto.setCaption(message.getText());
+                sendPhoto.setCaption(hashtag);
                 sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                 System.out.println("Send photo");
                 execute(sendPhoto);
