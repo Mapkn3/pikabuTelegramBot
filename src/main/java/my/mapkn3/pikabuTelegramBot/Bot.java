@@ -3,8 +3,6 @@ package my.mapkn3.pikabuTelegramBot;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -16,15 +14,12 @@ public class Bot extends TelegramLongPollingBot {
             Message message = update.getMessage();
             System.out.println("Has photo? " + message.hasPhoto());
             if (message.hasPhoto()) {
-                SendPhoto sendPhoto;
-                for (PhotoSize photoSize : message.getPhoto()) {
-                    sendPhoto = new SendPhoto();
-                    sendPhoto.setChatId(message.getChatId());
-                    sendPhoto.setCaption(message.getCaption());
-                    sendPhoto.setPhoto(photoSize.getFileId());
-                    System.out.println("Send photo");
-                    execute(sendPhoto);
-                }
+                SendPhoto sendPhoto = new SendPhoto();
+                sendPhoto.setChatId(message.getChatId());
+                sendPhoto.setCaption(message.getText());
+                sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
+                System.out.println("Send photo");
+                execute(sendPhoto);
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
