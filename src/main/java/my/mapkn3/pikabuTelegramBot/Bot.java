@@ -40,6 +40,7 @@ public class Bot extends TelegramLongPollingBot {
             DeleteMessage deleteMessage = new DeleteMessage();
             deleteMessage.setChatId(message.getChatId());
             deleteMessage.setMessageId(message.getMessageId());
+            execute(deleteMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
