@@ -2,12 +2,22 @@ package my.mapkn3.pikabuTelegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.List;
+
 public class Bot extends TelegramLongPollingBot {
     private String hashtag = "";
+
+    @Override
+    public void onUpdatesReceived(List<Update> updates) {
+        if (updates.size() > 1) {
+            updates.forEach(this::onUpdateReceived);
+        }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -27,6 +37,9 @@ public class Bot extends TelegramLongPollingBot {
                 System.out.println("Send photo");
                 execute(sendPhoto);
             }
+            DeleteMessage deleteMessage = new DeleteMessage();
+            deleteMessage.setChatId(message.getChatId());
+            deleteMessage.setMessageId(message.getMessageId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
