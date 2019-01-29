@@ -15,7 +15,7 @@ public class Bot extends TelegramLongPollingBot {
             System.out.println("Get message");
             Message message = update.getMessage();
             String text = message.getCaption();
-            if (!text.equals("")) {
+            if (text != null) {
                 hashtag = text;
             }
             System.out.println("Has photo? " + message.hasPhoto());
