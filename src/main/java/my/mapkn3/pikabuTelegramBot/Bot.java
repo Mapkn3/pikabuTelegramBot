@@ -16,15 +16,20 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
+        boolean allInOne = false;
         String caption = updates.get(0).getMessage().getCaption();
         if (caption != null) {
             if (caption.charAt(0) == '#') {
+                allInOne = true;
                 isActive = true;
                 hashtag = caption;
             }
         }
         updates.forEach(this::onUpdateReceived);
-        isActive = false;
+        if (allInOne) {
+            isActive = false;
+            allInOne = false;
+        }
     }
 
     @Override
