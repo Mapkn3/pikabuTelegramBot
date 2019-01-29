@@ -16,9 +16,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
-        if (updates.size() > 0) {
-            updates.forEach(this::onUpdateReceived);
-        }
+        updates.forEach(this::onUpdateReceived);
     }
 
     @Override
@@ -30,15 +28,11 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
-                    isActive = !hashtag.equals("#стоп");
+                    isActive = true;
                     System.out.println("Hashtag change to " + hashtag);
                 } else {
                     isActive = false;
                 }
-            }
-            String text = message.getCaption();
-            if (text != null) {
-                hashtag = text;
             }
             System.out.println("Has photo? " + message.hasPhoto());
             if (message.hasPhoto()) {
