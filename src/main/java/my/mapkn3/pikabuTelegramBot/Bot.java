@@ -12,9 +12,21 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
-    private String hashtag = "";
-    private String author = "";
-    private boolean isActive = false;
+    private String botUsername;
+    private String botApiToken;
+
+    private String hashtag;
+    private String author;
+    private boolean isActive;
+
+    public Bot() {
+        this.botUsername = System.getenv("BOT_USERNAME");
+        this.botApiToken = System.getenv("BOT_API_TOKEN");
+
+        this.hashtag = "";
+        this.author = "";
+        this.isActive = false;
+    }
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
@@ -117,11 +129,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "Mapkn3_bot";
+        return botUsername;
     }
 
     @Override
     public String getBotToken() {
-        return "644265190:AAE4pUkB2UWXpyXjprgyz14hYKGDUnkAiqQ";
+        return botApiToken;
     }
 }
