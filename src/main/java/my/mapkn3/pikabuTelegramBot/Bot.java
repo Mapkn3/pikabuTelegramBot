@@ -48,7 +48,7 @@ public class Bot extends TelegramLongPollingBot {
                     hashtag = message.getText();
                     author = message.getFrom().getUserName();
                     isActive = true;
-                    System.out.println("Hashtag change to " + hashtag + " from " + author);
+                    System.out.println("Hashtag change to " + hashtag + " from @" + author);
                 } else {
                     isActive = false;
                 }
@@ -57,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasPhoto()) {
                 SendPhoto sendPhoto = new SendPhoto();
                 sendPhoto.setChatId(message.getChatId());
-                sendPhoto.setCaption(hashtag + " from " + author);
+                sendPhoto.setCaption(hashtag + " from @" + author);
                 sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                 if (isActive) {
                     System.out.println("Send photo");
@@ -68,7 +68,7 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasAnimation()) {
                 SendAnimation sendAnimation = new SendAnimation();
                 sendAnimation.setChatId(message.getChatId());
-                sendAnimation.setCaption(hashtag + " from " + author);
+                sendAnimation.setCaption(hashtag + " from @" + author);
                 sendAnimation.setAnimation(message.getAnimation().getFileId());
                 if (isActive) {
                     System.out.println("Send animation");
@@ -79,7 +79,7 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasDocument()) {
                 SendDocument sendDocument = new SendDocument();
                 sendDocument.setChatId(message.getChatId());
-                sendDocument.setCaption(hashtag + " from " + author);
+                sendDocument.setCaption(hashtag + " from @" + author);
                 sendDocument.setDocument(message.getDocument().getFileId());
                 if (isActive) {
                     System.out.println("Send document");
