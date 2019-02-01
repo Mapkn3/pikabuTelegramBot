@@ -40,8 +40,8 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            System.out.println("Get message");
             Message message = update.getMessage();
+            System.out.println("Get message from " + message.getFrom().getUserName());
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
@@ -50,43 +50,41 @@ public class Bot extends TelegramLongPollingBot {
                     isActive = true;
                     System.out.println("Hashtag change to " + hashtag + " from @" + author);
                 } else {
-                    isActive = false;
+                    if (message.getFrom().getUserName().equals(author)) {
+                        isActive = false;
+                    }
                 }
             }
-            System.out.println("Has photo? " + message.hasPhoto());
-            if (message.hasPhoto()) {
-                SendPhoto sendPhoto = new SendPhoto();
-                sendPhoto.setChatId(message.getChatId());
-                sendPhoto.setCaption(hashtag + " from @" + author);
-                sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
-                if (isActive) {
+            if (isActive && message.getFrom().getUserName().equals(author)) {
+                System.out.println("Has photo? " + message.hasPhoto());
+                if (message.hasPhoto()) {
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(message.getChatId());
+                    sendPhoto.setCaption(hashtag + " from @" + author);
+                    sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                     System.out.println("Send photo");
                     execute(sendPhoto);
                 }
-            }
-            System.out.println("Has animation? " + message.hasAnimation());
-            if (message.hasAnimation()) {
-                SendAnimation sendAnimation = new SendAnimation();
-                sendAnimation.setChatId(message.getChatId());
-                sendAnimation.setCaption(hashtag + " from @" + author);
-                sendAnimation.setAnimation(message.getAnimation().getFileId());
-                if (isActive) {
+                System.out.println("Has animation? " + message.hasAnimation());
+                if (message.hasAnimation()) {
+                    SendAnimation sendAnimation = new SendAnimation();
+                    sendAnimation.setChatId(message.getChatId());
+                    sendAnimation.setCaption(hashtag + " from @" + author);
+                    sendAnimation.setAnimation(message.getAnimation().getFileId());
                     System.out.println("Send animation");
                     execute(sendAnimation);
+
                 }
-            }
-            System.out.println("Has document? " + message.hasDocument());
-            if (message.hasDocument()) {
-                SendDocument sendDocument = new SendDocument();
-                sendDocument.setChatId(message.getChatId());
-                sendDocument.setCaption(hashtag + " from @" + author);
-                sendDocument.setDocument(message.getDocument().getFileId());
-                if (isActive) {
+                System.out.println("Has document? " + message.hasDocument());
+                if (message.hasDocument()) {
+                    SendDocument sendDocument = new SendDocument();
+                    sendDocument.setChatId(message.getChatId());
+                    sendDocument.setCaption(hashtag + " from @" + author);
+                    sendDocument.setDocument(message.getDocument().getFileId());
                     System.out.println("Send document");
                     execute(sendDocument);
+
                 }
-            }
-            if (isActive) {
                 DeleteMessage deleteMessage = new DeleteMessage();
                 deleteMessage.setChatId(message.getChatId());
                 deleteMessage.setMessageId(message.getMessageId());
