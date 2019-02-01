@@ -46,9 +46,13 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
-                    author = message.getFrom().getUserName();
+                    if (message.getFrom().getUserName() != null) {
+                        author = "@" + message.getFrom().getUserName();
+                    } else {
+                        author = message.getFrom().getLastName() + " " + message.getFrom().getFirstName();
+                    }
                     isActive = true;
-                    System.out.println("Hashtag change to " + hashtag + " from @" + author);
+                    System.out.println("Hashtag change to " + hashtag + " from " + author);
                 } else {
                     if (message.getFrom().getUserName().equals(author)) {
                         isActive = false;
@@ -60,7 +64,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (message.hasPhoto()) {
                     SendPhoto sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(message.getChatId());
-                    sendPhoto.setCaption(hashtag + " from @" + author);
+                    sendPhoto.setCaption(hashtag + " from " + author);
                     sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                     System.out.println("Send photo");
                     execute(sendPhoto);
@@ -69,7 +73,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (message.hasAnimation()) {
                     SendAnimation sendAnimation = new SendAnimation();
                     sendAnimation.setChatId(message.getChatId());
-                    sendAnimation.setCaption(hashtag + " from @" + author);
+                    sendAnimation.setCaption(hashtag + " from " + author);
                     sendAnimation.setAnimation(message.getAnimation().getFileId());
                     System.out.println("Send animation");
                     execute(sendAnimation);
@@ -77,7 +81,7 @@ public class Bot extends TelegramLongPollingBot {
                 } else if (message.hasDocument()) {
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(message.getChatId());
-                    sendDocument.setCaption(hashtag + " from @" + author);
+                    sendDocument.setCaption(hashtag + " from " + author);
                     sendDocument.setDocument(message.getDocument().getFileId());
                     System.out.println("Send document");
                     execute(sendDocument);
