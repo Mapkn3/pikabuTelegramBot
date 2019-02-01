@@ -43,7 +43,7 @@ public class Bot extends TelegramLongPollingBot {
             Message message = update.getMessage();
             String username = "@" + message.getFrom().getUserName();
             String name = message.getFrom().getLastName() + " " + message.getFrom().getFirstName();
-            System.out.println("Get message from " + name + " (@" + username + ")");
+            System.out.println("Get message from " + name + " (" + username + ")");
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
