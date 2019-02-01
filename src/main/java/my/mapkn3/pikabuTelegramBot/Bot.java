@@ -41,15 +41,17 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             Message message = update.getMessage();
-            System.out.println("Get message from " + message.getFrom().getUserName());
+            String username = "@" + message.getFrom().getUserName();
+            String name = message.getFrom().getLastName() + " " + message.getFrom().getFirstName();
+            System.out.println("Get message from " + name + " (@" + username + ")");
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
                     if (message.getFrom().getUserName() != null) {
-                        author = "@" + message.getFrom().getUserName();
+                        author = username;
                     } else {
-                        author = message.getFrom().getLastName() + " " + message.getFrom().getFirstName();
+                        author = name;
                     }
                     isActive = true;
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
@@ -59,7 +61,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 }
             }
-            if (isActive && message.getFrom().getUserName().equals(author)) {
+            if (isActive && (author.equals(username) || author.equals(name))) {
                 System.out.println("Has photo? " + message.hasPhoto());
                 if (message.hasPhoto()) {
                     SendPhoto sendPhoto = new SendPhoto();
