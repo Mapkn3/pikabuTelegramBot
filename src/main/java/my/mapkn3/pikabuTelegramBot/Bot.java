@@ -41,8 +41,23 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             Message message = update.getMessage();
-            String username = "@" + message.getFrom().getUserName();
-            String name = message.getFrom().getLastName() + " " + message.getFrom().getFirstName();
+            String username = "unknown";
+            String name = "unknown";
+            if (message.getFrom().getUserName() != null) {
+                username = "@" + message.getFrom().getUserName();
+            }
+            String lastName = message.getFrom().getLastName();
+            String firstName = message.getFrom().getFirstName();
+            if (lastName != null && firstName != null) {
+                name = lastName + " " + firstName;
+            } else {
+                if (lastName != null) {
+                    name = lastName;
+                }
+                if (firstName != null) {
+                    name = firstName;
+                }
+            }
             System.out.println("Get message from " + name + " (" + username + ")");
             System.out.println("Has text? " + message.hasText());
             if (message.hasText()) {
@@ -56,7 +71,7 @@ public class Bot extends TelegramLongPollingBot {
                     isActive = true;
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
                 } else {
-                    if (message.getFrom().getUserName().equals(author)) {
+                    if (author.equals(username) || author.equals(name)) {
                         isActive = false;
                     }
                 }
