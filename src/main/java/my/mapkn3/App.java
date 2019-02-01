@@ -15,11 +15,10 @@ public class App {
         System.getProperties().put("socksProxyHost", "127.0.0.1");
         System.getProperties().put("socksProxyPort", "9150");
 */
-        Bot bot = new Bot();
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(bot);
+            telegramBotsApi.registerBot(new Bot());
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
