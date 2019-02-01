@@ -65,7 +65,7 @@ public class Bot extends TelegramLongPollingBot {
                     System.out.println("Send photo");
                     execute(sendPhoto);
                 }
-                System.out.println("Has animation? " + message.hasAnimation());
+                System.out.println("Has animation/document? " + message.hasAnimation() + "/" + message.hasDocument());
                 if (message.hasAnimation()) {
                     SendAnimation sendAnimation = new SendAnimation();
                     sendAnimation.setChatId(message.getChatId());
@@ -74,9 +74,7 @@ public class Bot extends TelegramLongPollingBot {
                     System.out.println("Send animation");
                     execute(sendAnimation);
 
-                }
-                System.out.println("Has document? " + message.hasDocument());
-                if (message.hasDocument()) {
+                } else if (message.hasDocument()) {
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(message.getChatId());
                     sendDocument.setCaption(hashtag + " from @" + author);
