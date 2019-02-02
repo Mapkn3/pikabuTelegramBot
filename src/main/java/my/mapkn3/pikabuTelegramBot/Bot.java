@@ -89,6 +89,7 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
             if (isActive && (author.equals(username) || author.equals(name))) {
+                boolean isDelete = false;
                 System.out.println("Has photo? " + message.hasPhoto());
                 if (message.hasPhoto()) {
                     SendPhoto sendPhoto = new SendPhoto();
@@ -97,6 +98,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
                     System.out.println("Send photo");
                     execute(sendPhoto);
+                    isDelete = true;
                 }
                 System.out.println("Has animation/document? " + message.hasAnimation() + "/" + message.hasDocument());
                 if (message.hasAnimation()) {
@@ -106,7 +108,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendAnimation.setAnimation(message.getAnimation().getFileId());
                     System.out.println("Send animation");
                     execute(sendAnimation);
-
+                    isDelete = true;
                 } else if (message.hasDocument()) {
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(message.getChatId());
@@ -114,13 +116,15 @@ public class Bot extends TelegramLongPollingBot {
                     sendDocument.setDocument(message.getDocument().getFileId());
                     System.out.println("Send document");
                     execute(sendDocument);
-
+                    isDelete = true;
                 }
-                DeleteMessage deleteMessage = new DeleteMessage();
-                deleteMessage.setChatId(message.getChatId());
-                deleteMessage.setMessageId(message.getMessageId());
-                execute(deleteMessage);
-                System.out.println("Message deleted");
+                if (isDelete) {
+                    DeleteMessage deleteMessage = new DeleteMessage();
+                    deleteMessage.setChatId(message.getChatId());
+                    deleteMessage.setMessageId(message.getMessageId());
+                    execute(deleteMessage);
+                    System.out.println("Message deleted");
+               }
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
