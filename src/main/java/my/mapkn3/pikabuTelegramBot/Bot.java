@@ -31,6 +31,7 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdatesReceived(List<Update> updates) {
         System.out.println("Get " + updates.size() + " updates. Is active: " + isActive);
+        updates.forEach(System.out::println);
         boolean allInOne = false;
         Message message = updates.get(0).getMessage();
         String caption = message.getCaption();
@@ -39,13 +40,11 @@ public class Bot extends TelegramLongPollingBot {
                 allInOne = true;
                 isActive = true;
                 hashtag = caption;
-                author = message.getFrom().getUserName();
             }
         }
         updates.forEach(this::onUpdateReceived);
         if (allInOne) {
             isActive = false;
-            allInOne = false;
         }
     }
 
@@ -53,6 +52,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             Message message = update.getMessage();
+
             String username = "unknown";
             String name = "unknown";
             if (message.getFrom().getUserName() != null) {
@@ -70,17 +70,18 @@ public class Bot extends TelegramLongPollingBot {
                     name = firstName;
                 }
             }
+            if (message.getFrom().getUserName() != null) {
+                author = username;
+            } else {
+                author = name;
+            }
             System.out.println("Get message from " + name + " (" + username + ")");
-            System.out.println("Has text? " + message.hasText());
+
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
-                    if (message.getFrom().getUserName() != null) {
-                        author = username;
-                    } else {
-                        author = name;
-                    }
                     isActive = true;
+                    execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
                 } else {
                     if (author.equals(username) || author.equals(name)) {
@@ -96,7 +97,6 @@ public class Bot extends TelegramLongPollingBot {
                     sendPhoto.setChatId(message.getChatId());
                     sendPhoto.setCaption(hashtag + " from " + author);
                     sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
-                    System.out.println("Send photo");
                     execute(sendPhoto);
                     isDelete = true;
                 }
@@ -106,7 +106,6 @@ public class Bot extends TelegramLongPollingBot {
                     sendAnimation.setChatId(message.getChatId());
                     sendAnimation.setCaption(hashtag + " from " + author);
                     sendAnimation.setAnimation(message.getAnimation().getFileId());
-                    System.out.println("Send animation");
                     execute(sendAnimation);
                     isDelete = true;
                 } else if (message.hasDocument()) {
@@ -114,7 +113,6 @@ public class Bot extends TelegramLongPollingBot {
                     sendDocument.setChatId(message.getChatId());
                     sendDocument.setCaption(hashtag + " from " + author);
                     sendDocument.setDocument(message.getDocument().getFileId());
-                    System.out.println("Send document");
                     execute(sendDocument);
                     isDelete = true;
                 }
