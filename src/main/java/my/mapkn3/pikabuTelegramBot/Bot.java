@@ -72,7 +72,7 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             boolean isChangeHashtag = false;
-            if (description.trim().isEmpty()) {
+            if (!description.trim().isEmpty()) {
                 if (description.charAt(0) == '#') {
                     isChangeHashtag = true;
                 } else {
