@@ -81,23 +81,34 @@ public class Bot extends TelegramLongPollingBot {
             }
             System.out.println("Get message from " + name + " (" + username + ")");
 
+            String description = "";
+            if (message.getCaption() != null) {
+                description = message.getCaption();
+            }
             if (message.hasText()) {
-                if (message.getText().charAt(0) == '#') {
-                    hashtag = message.getText();
-                    if (message.getFrom().getUserName() != null) {
-                        author = username;
-                    } else {
-                        author = name;
-                    }
-                    isActive = true;
-                    execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
-                    System.out.println("Hashtag change to " + hashtag + " from " + author);
-                } else {
-                    if (author.equals(username) || author.equals(name)) {
-                        isActive = false;
-                    }
+                description = message.getText();
+            }
+
+            boolean isChangeHashtag = false;
+            if (description.charAt(0) == '#') {
+                isChangeHashtag = true;
+            } else {
+                if (author.equals(username) || author.equals(name)) {
+                    isActive = false;
                 }
             }
+            if (isChangeHashtag) {
+                hashtag = message.getText();
+                if (message.getFrom().getUserName() != null) {
+                    author = username;
+                } else {
+                    author = name;
+                }
+                isActive = true;
+                execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
+                System.out.println("Hashtag change to " + hashtag + " from " + author);
+            }
+
             if (isActive && (author.equals(username) || author.equals(name))) {
                 boolean isDelete = false;
                 System.out.println("Has photo? " + message.hasPhoto());
