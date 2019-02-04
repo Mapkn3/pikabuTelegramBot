@@ -33,25 +33,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdatesReceived(List<Update> updates) {
         System.out.println("Get " + updates.size() + " updates. Is active: " + isActive);
         updates.forEach(System.out::println);
-        boolean allInOne = false;
-        Message message = updates.get(0).getMessage();
-        if (message == null) {
-            message = updates.get(0).getEditedMessage();
-        }
-        String caption = message.getCaption();
-        if (caption != null) {
-            if (caption.charAt(0) == '#') {
-                allInOne = true;
-                isActive = true;
-                hashtag = caption;
-                System.out.println("Begin album");
-            }
-        }
         updates.forEach(this::onUpdateReceived);
-        if (allInOne) {
-            System.out.println("End album");
-            isActive = false;
-        }
     }
 
     @Override
