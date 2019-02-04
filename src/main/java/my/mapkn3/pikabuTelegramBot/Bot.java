@@ -4,6 +4,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -78,23 +79,21 @@ public class Bot extends TelegramLongPollingBot {
                     name = firstName;
                 }
             }
-            if (message.getFrom().getUserName() != null) {
-                author = username;
-            } else {
-                author = name;
-            }
             System.out.println("Get message from " + name + " (" + username + ")");
 
             if (message.hasText()) {
                 if (message.getText().charAt(0) == '#') {
                     hashtag = message.getText();
+                    if (message.getFrom().getUserName() != null) {
+                        author = username;
+                    } else {
+                        author = name;
+                    }
                     isActive = true;
                     execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
                 } else {
-                    System.out.println("Now i get message from " + name + " (" + username + "), but author is " + author);
                     if (author.equals(username) || author.equals(name)) {
-                        System.out.println("Ok ok, i'm deactivated...");
                         isActive = false;
                     }
                 }
@@ -124,6 +123,14 @@ public class Bot extends TelegramLongPollingBot {
                     sendDocument.setCaption(hashtag + " from " + author);
                     sendDocument.setDocument(message.getDocument().getFileId());
                     execute(sendDocument);
+                    isDelete = true;
+                }
+                if (message.hasVideo()) {
+                    SendVideo sendVideo = new SendVideo();
+                    sendVideo.setChatId(message.getChatId());
+                    sendVideo.setCaption(hashtag + " from " + author);
+                    sendVideo.setVideo(message.getVideo().getFileId());
+                    execute(sendVideo);
                     isDelete = true;
                 }
                 if (isDelete) {
