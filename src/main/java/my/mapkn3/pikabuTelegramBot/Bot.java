@@ -88,7 +88,6 @@ public class Bot extends TelegramLongPollingBot {
                         author = name;
                     }
                     isActive = true;
-                    execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
                 }
             }
@@ -96,6 +95,9 @@ public class Bot extends TelegramLongPollingBot {
 
             if (isActive && (author.equals(username) || author.equals(name))) {
                 boolean isDelete = false;
+                if (isChangeHashtag) {
+                    isDelete = true;
+                }
                 System.out.println("Has photo? " + message.hasPhoto());
                 if (message.hasPhoto()) {
                     SendPhoto sendPhoto = new SendPhoto();
