@@ -97,6 +97,9 @@ public class Bot extends TelegramLongPollingBot {
                 boolean isDelete = false;
                 if (isChangeHashtag) {
                     isDelete = true;
+                    if (update.getMessage() == null) {
+                        isActive = false;
+                    }
                 }
                 System.out.println("Has photo? " + message.hasPhoto());
                 if (message.hasPhoto()) {
