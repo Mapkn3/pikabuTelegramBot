@@ -72,24 +72,27 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             boolean isChangeHashtag = false;
-            if (description.charAt(0) == '#') {
-                isChangeHashtag = true;
-            } else {
-                if (author.equals(username) || author.equals(name)) {
-                    isActive = false;
-                }
-            }
-            if (isChangeHashtag) {
-                hashtag = message.getText();
-                if (message.getFrom().getUserName() != null) {
-                    author = username;
+            if (description != null) {
+                if (description.charAt(0) == '#') {
+                    isChangeHashtag = true;
                 } else {
-                    author = name;
+                    if (author.equals(username) || author.equals(name)) {
+                        isActive = false;
+                    }
                 }
-                isActive = true;
-                execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
-                System.out.println("Hashtag change to " + hashtag + " from " + author);
+                if (isChangeHashtag) {
+                    hashtag = description;
+                    if (message.getFrom().getUserName() != null) {
+                        author = username;
+                    } else {
+                        author = name;
+                    }
+                    isActive = true;
+                    execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
+                    System.out.println("Hashtag change to " + hashtag + " from " + author);
+                }
             }
+
 
             if (isActive && (author.equals(username) || author.equals(name))) {
                 boolean isDelete = false;
