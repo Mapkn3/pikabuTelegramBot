@@ -34,6 +34,9 @@ public class Bot extends TelegramLongPollingBot {
         updates.forEach(System.out::println);
         boolean allInOne = false;
         Message message = updates.get(0).getMessage();
+        if (message == null) {
+            message = updates.get(0).getEditedMessage();
+        }
         String caption = message.getCaption();
         if (caption != null) {
             if (caption.charAt(0) == '#') {
