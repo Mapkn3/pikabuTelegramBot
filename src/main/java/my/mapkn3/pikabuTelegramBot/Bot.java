@@ -52,6 +52,9 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             Message message = update.getMessage();
+            if (message == null) {
+                message = update.getEditedMessage();
+            }
 
             String username = "unknown";
             String name = "unknown";
