@@ -96,7 +96,7 @@ public class Bot extends TelegramLongPollingBot {
                     SendPhoto sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(message.getChatId());
                     sendPhoto.setCaption(hashtag + " from " + author);
-                    sendPhoto.setPhoto(message.getPhoto().get(0).getFileId());
+                    sendPhoto.setPhoto(message.getPhoto().get(message.getPhoto().size()-1).getFileId());
                     execute(sendPhoto);
                     isDelete = true;
                 }
