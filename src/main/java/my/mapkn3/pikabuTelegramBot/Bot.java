@@ -92,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
                     execute(new DeleteMessage().setChatId(message.getChatId()).setMessageId(message.getMessageId()));
                     System.out.println("Hashtag change to " + hashtag + " from " + author);
                 } else {
-                    System.out.println("Now i get message from " + name + ", but author is " + author);
+                    System.out.println("Now i get message from " + name + " (" + username + "), but author is " + author);
                     if (author.equals(username) || author.equals(name)) {
                         System.out.println("Ok ok, i'm deactivated...");
                         isActive = false;
