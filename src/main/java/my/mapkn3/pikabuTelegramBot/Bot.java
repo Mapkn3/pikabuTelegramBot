@@ -17,9 +17,12 @@ public class Bot extends TelegramLongPollingBot {
     private boolean isActive;
 
     private enum TYPE {
+        SIMPLE,
         HASHTAG,
         IMAGE,
+        GIF,
         DOCUMENT,
+        VIDEO,
         URL
     }
 
@@ -120,6 +123,31 @@ public class Bot extends TelegramLongPollingBot {
         deleteMessage.setMessageId(message.getMessageId());
         execute(deleteMessage);
         System.out.println("Message deleted");
+    }
+
+    private TYPE getMessageType(Message message) {
+        if (message.hasText()) {
+            String text = message.getText();
+            if (!text.trim().isEmpty() && text.charAt(0) == '#' && text.length() > 1) {
+                return TYPE.HASHTAG;
+            }
+            if (text.startsWith("http")) {
+                return TYPE.URL;
+            }
+        }
+        if (message.hasPhoto()) {
+            return TYPE.IMAGE;
+        }
+        if (message.hasAnimation()) {
+            return TYPE.GIF;
+        }
+        if (message.hasDocument()) {
+            return TYPE.DOCUMENT;
+        }
+        if (message.hasVideo()) {
+            return TYPE.VIDEO;
+        }
+        return TYPE.SIMPLE;
     }
 
     @Override
