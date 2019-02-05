@@ -61,7 +61,7 @@ public class Bot extends TelegramLongPollingBot {
                 }
                 System.out.println("Has text? " + chatState.getLastMessage().hasText());
                 if (chatState.getLastMessage().hasText()) {
-                    if (chatState.getLastMessage().getText().startsWith("http")) {
+                    if (!chatState.isChangeHashtag() && chatState.getLastMessage().getText().startsWith("http")) {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setChatId(chatState.getLastMessage().getChatId());
                         sendMessage.setText(chatState.getLastMessage().getText() + " from " + chatState.getAuthor());
@@ -69,6 +69,7 @@ public class Bot extends TelegramLongPollingBot {
                         isDelete = true;
                     } else {
                         this.isActive = false;
+                        System.out.println("Switch isActive to off");
                     }
                 }
                 System.out.println("Has photo? " + chatState.getLastMessage().hasPhoto());
