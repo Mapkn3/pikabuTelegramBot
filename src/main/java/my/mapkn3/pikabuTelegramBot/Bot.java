@@ -32,7 +32,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdatesReceived(List<Update> updates) {
-        System.out.println("Get " + updates.size() + " updates. Is active: " + isActive);
+        System.out.println("Get " + updates.size() + " updates. Is active: " + this.isActive);
         updates.forEach(System.out::println);
         updates.forEach(this::onUpdateReceived);
     }
@@ -45,17 +45,18 @@ public class Bot extends TelegramLongPollingBot {
             System.out.println("Get message from " + chatState.getName() + " (" + chatState.getUsername() + ")");
 
             if (chatState.isChangeHashtag()) {
-                isActive = true;
+                this.isActive = true;
                 System.out.println("Switch isActive to on");
             }
 
-            if (isActive && chatState.fromAuthor()) {
+            if (this.isActive && chatState.fromAuthor()) {
+                System.out.println("Main thread");
                 boolean isDelete = false;
                 if (chatState.isChangeHashtag()) {
                     isDelete = true;
                     if (update.getMessage() == null) {
-                        isActive = false;
-                        System.out.println("Switch isActive to on");
+                        this.isActive = false;
+                        System.out.println("Switch isActive to off");
                     }
                 }
                 System.out.println("Has text? " + chatState.getLastMessage().hasText());
@@ -67,7 +68,7 @@ public class Bot extends TelegramLongPollingBot {
                         execute(sendMessage);
                         isDelete = true;
                     } else {
-                        isActive = false;
+                        this.isActive = false;
                     }
                 }
                 System.out.println("Has photo? " + chatState.getLastMessage().hasPhoto());
