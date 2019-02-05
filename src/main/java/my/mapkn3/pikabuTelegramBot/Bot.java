@@ -56,14 +56,17 @@ public class Bot extends TelegramLongPollingBot {
                         isActive = false;
                     }
                 }
-                if (chatState.getLastMessage().getText().startsWith("http")) {
-                    SendMessage sendMessage = new SendMessage();
-                    sendMessage.setChatId(chatState.getLastMessage().getChatId());
-                    sendMessage.setText(chatState.getLastMessage().getText() + " from " + chatState.getAuthor());
-                    execute(sendMessage);
-                    isDelete = true;
-                } else {
-                    isActive = false;
+                System.out.println("Has text? " + chatState.getLastMessage().hasText());
+                if (chatState.getLastMessage().hasText()) {
+                    if (chatState.getLastMessage().getText().startsWith("http")) {
+                        SendMessage sendMessage = new SendMessage();
+                        sendMessage.setChatId(chatState.getLastMessage().getChatId());
+                        sendMessage.setText(chatState.getLastMessage().getText() + " from " + chatState.getAuthor());
+                        execute(sendMessage);
+                        isDelete = true;
+                    } else {
+                        isActive = false;
+                    }
                 }
                 System.out.println("Has photo? " + chatState.getLastMessage().hasPhoto());
                 if (chatState.getLastMessage().hasPhoto()) {
