@@ -161,22 +161,22 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         public ChatState updateChatState(Update update) {
-            chatId = update.getMessage().getChatId();
-
-            lastMessage = update.getMessage();
             changeHashtag = false;
             Message message = update.getMessage();
             if (message == null) {
                 message = update.getEditedMessage();
             }
 
+            lastMessage = message;
+            chatId = lastMessage.getChatId();
+
             username = "unknown";
             name = "unknown";
-            if (message.getFrom().getUserName() != null) {
-                username = "@" + message.getFrom().getUserName();
+            if (lastMessage.getFrom().getUserName() != null) {
+                username = "@" + lastMessage.getFrom().getUserName();
             }
-            String lastName = message.getFrom().getLastName();
-            String firstName = message.getFrom().getFirstName();
+            String lastName = lastMessage.getFrom().getLastName();
+            String firstName = lastMessage.getFrom().getFirstName();
             if (lastName != null && firstName != null) {
                 name = lastName + " " + firstName;
             } else {
@@ -188,15 +188,15 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
             String description = "";
-            if (message.getCaption() != null) {
-                description = message.getCaption();
+            if (lastMessage.getCaption() != null) {
+                description = lastMessage.getCaption();
             }
-            if (message.hasText()) {
-                description = message.getText();
+            if (lastMessage.hasText()) {
+                description = lastMessage.getText();
             }
             if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1) {
                 hashtag = description;
-                if (message.getFrom().getUserName() != null) {
+                if (lastMessage.getFrom().getUserName() != null) {
                     author = username;
                 } else {
                     author = name;
