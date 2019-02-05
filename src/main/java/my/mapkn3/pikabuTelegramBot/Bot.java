@@ -73,7 +73,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (description.charAt(0) == '#') {
                     isChangeHashtag = true;
                 } else {
-                    if (author.equals(username) || author.equals(name)) {
+                    if ((author.equals(username) || author.equals(name)) && !message.getText().startsWith("http")) {
                         isActive = false;
                     }
                 }
