@@ -135,8 +135,6 @@ public class Bot extends TelegramLongPollingBot {
     public class ChatState {
         private Long chatId;
         private Message lastMessage;
-        private String username;
-        private String name;
         private String hashtag;
         private String author;
         private boolean changeHashtag;
@@ -144,8 +142,6 @@ public class Bot extends TelegramLongPollingBot {
         public ChatState() {
             chatId = 0L;
             lastMessage = null;
-            username = "unknown";
-            name = "unknown";
             hashtag = "";
             author = "";
             changeHashtag = false;
@@ -154,62 +150,9 @@ public class Bot extends TelegramLongPollingBot {
         public ChatState(Update update) {
             lastMessage = update.getMessage();
             chatId = lastMessage.getChatId();
-            username = "unknown";
-            name = "unknown";
             hashtag = "";
             author = "";
             changeHashtag = false;
-        }
-
-        public ChatState updateChatState(Update update) {
-            changeHashtag = false;
-            Message message = update.getMessage();
-            if (message == null) {
-                message = update.getEditedMessage();
-            }
-
-            lastMessage = message;
-            chatId = lastMessage.getChatId();
-
-            username = "unknown";
-            name = "unknown";
-            if (lastMessage.getFrom().getUserName() != null) {
-                username = "@" + lastMessage.getFrom().getUserName();
-            }
-            String lastName = lastMessage.getFrom().getLastName();
-            String firstName = lastMessage.getFrom().getFirstName();
-            if (lastName != null && firstName != null) {
-                name = lastName + " " + firstName;
-            } else {
-                if (lastName != null) {
-                    name = lastName;
-                }
-                if (firstName != null) {
-                    name = firstName;
-                }
-            }
-            String description = "";
-            if (lastMessage.getCaption() != null) {
-                description = lastMessage.getCaption();
-            }
-            if (lastMessage.hasText()) {
-                description = lastMessage.getText();
-            }
-            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1) {
-                hashtag = description;
-                if (lastMessage.getFrom().getUserName() != null) {
-                    author = username;
-                } else {
-                    author = name;
-                }
-                changeHashtag = true;
-                System.out.println("Hashtag change to " + hashtag + " from " + author);
-            }
-            return this;
-        }
-
-        public boolean fromAuthor() {
-            return author.equals(username) || author.equals(name);
         }
 
         public Long getChatId() {
@@ -218,14 +161,6 @@ public class Bot extends TelegramLongPollingBot {
 
         public Message getLastMessage() {
             return lastMessage;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getName() {
-            return name;
         }
 
         public String getHashtag() {
@@ -238,6 +173,74 @@ public class Bot extends TelegramLongPollingBot {
 
         public boolean isChangeHashtag() {
             return changeHashtag;
+        }
+
+        public ChatState updateChatState(Update update) {
+            changeHashtag = false;
+
+            lastMessage = getMessageFromUpdate(update);
+            chatId = lastMessage.getChatId();
+
+            String description = getTextContent();
+            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1) {
+                hashtag = description;
+                if (getUsername().equals("unknown")) {
+                    author = getName();
+                } else {
+                    author = getUsername();
+                }
+                changeHashtag = true;
+                System.out.println("Hashtag change to " + hashtag + " from " + author);
+            }
+            return this;
+        }
+
+        public boolean fromAuthor() {
+            return author.equals(getUsername()) || author.equals(getName());
+        }
+
+        public Message getMessageFromUpdate(Update update) {
+            Message message = update.getMessage();
+            if (message == null) {
+                message = update.getEditedMessage();
+            }
+            return message;
+        }
+
+        public String getUsername() {
+            String username = "unknown";
+            if (lastMessage.getFrom().getUserName() != null) {
+                username = "@" + lastMessage.getFrom().getUserName();
+            }
+            return username;
+        }
+
+        public String getName() {
+            String name = "unknown";
+            String lastName = lastMessage.getFrom().getLastName();
+            String firstName = lastMessage.getFrom().getFirstName();
+            if (lastName != null && firstName != null) {
+                name = lastName + " " + firstName;
+            } else {
+                if (lastName != null) {
+                    name = lastName;
+                }
+                if (firstName != null) {
+                    name = firstName;
+                }
+            }
+            return name;
+        }
+
+        public String getTextContent() {
+            String textContent = "";
+            if (lastMessage.getCaption() != null) {
+                textContent = lastMessage.getCaption();
+            }
+            if (lastMessage.hasText()) {
+                textContent = lastMessage.getText();
+            }
+            return textContent;
         }
     }
 }
