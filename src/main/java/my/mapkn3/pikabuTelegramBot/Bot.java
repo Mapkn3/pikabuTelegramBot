@@ -1,10 +1,7 @@
 package my.mapkn3.pikabuTelegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -100,6 +97,13 @@ public class Bot extends TelegramLongPollingBot {
                     if (update.getMessage() == null) {
                         isActive = false;
                     }
+                }
+                if (message.getText().startsWith("http")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(message.getChatId());
+                    sendMessage.setText(message.getText() + " from " + author);
+                    execute(sendMessage);
+                    isDelete = true;
                 }
                 System.out.println("Has photo? " + message.hasPhoto());
                 if (message.hasPhoto()) {
