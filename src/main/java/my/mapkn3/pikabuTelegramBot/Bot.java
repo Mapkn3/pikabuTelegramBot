@@ -192,7 +192,7 @@ public class Bot extends TelegramLongPollingBot {
             if (message.hasText()) {
                 description = message.getText();
             }
-            if (description.charAt(0) == '#' && description.length() > 1) {
+            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1) {
                 hashtag = description;
                 if (message.getFrom().getUserName() != null) {
                     author = username;
