@@ -50,7 +50,6 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             if (this.isActive && chatState.fromAuthor()) {
-                System.out.println("Main thread");
                 boolean isDelete = false;
                 if (chatState.isChangeHashtag()) {
                     isDelete = true;
@@ -60,8 +59,8 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 }
                 System.out.println("Has text? " + chatState.getLastMessage().hasText());
-                if (chatState.getLastMessage().hasText()) {
-                    if (!chatState.isChangeHashtag() && chatState.getLastMessage().getText().startsWith("http")) {
+                if (chatState.getLastMessage().hasText() && !chatState.isChangeHashtag()) {
+                    if (chatState.getLastMessage().getText().startsWith("http")) {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setChatId(chatState.getLastMessage().getChatId());
                         sendMessage.setText(chatState.getLastMessage().getText() + " from " + chatState.getAuthor());
