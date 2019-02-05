@@ -46,6 +46,7 @@ public class Bot extends TelegramLongPollingBot {
 
             if (chatState.isChangeHashtag()) {
                 isActive = true;
+                System.out.println("Switch isActive to on");
             }
 
             if (isActive && chatState.fromAuthor()) {
@@ -54,6 +55,7 @@ public class Bot extends TelegramLongPollingBot {
                     isDelete = true;
                     if (update.getMessage() == null) {
                         isActive = false;
+                        System.out.println("Switch isActive to on");
                     }
                 }
                 System.out.println("Has text? " + chatState.getLastMessage().hasText());
