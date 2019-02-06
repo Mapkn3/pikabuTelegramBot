@@ -47,12 +47,14 @@ public class Bot extends TelegramLongPollingBot {
         try {
             chatState = chatState.updateChatState(update);
 
-            if (chatState.getLastMessage().getText().toLowerCase().contains("#идеянедели") || chatState.getLastMessage().getText().toLowerCase().contains("#ин")) {
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setText(chatState.getLastMessage().getText());
-                sendMessage.setChatId(AkciumKicumId);
-                execute(sendMessage);
-                return;
+            if (chatState.getLastMessage().hasText()) {
+                if (chatState.getLastMessage().getText().toLowerCase().contains("#идеянедели") || chatState.getLastMessage().getText().toLowerCase().contains("#ин")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setText(chatState.getLastMessage().getText());
+                    sendMessage.setChatId(AkciumKicumId);
+                    execute(sendMessage);
+                    return;
+                }
             }
 
             System.out.println("Get message from " + chatState.getName() + " (" + chatState.getUsername() + ")");
