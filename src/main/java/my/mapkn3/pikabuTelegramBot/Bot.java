@@ -220,7 +220,7 @@ public class Bot extends TelegramLongPollingBot {
             chatId = lastMessage.getChatId();
 
             String description = getTextContent();
-            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1) {
+            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1 && !(lastMessage.getText().toLowerCase().contains("#идеянедели") || lastMessage.getText().toLowerCase().contains("#ин"))) {
                 hashtag = description;
                 if (getUsername().equals("unknown")) {
                     author = getName();
