@@ -16,6 +16,8 @@ public class Bot extends TelegramLongPollingBot {
     private ChatState chatState;
     private boolean isActive;
 
+    private Long AkciumKicumId = 255621638L;
+
     private enum TYPE {
         SIMPLE,
         HASHTAG,
@@ -44,6 +46,14 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             chatState = chatState.updateChatState(update);
+
+            if (chatState.getLastMessage().getText().toLowerCase().contains("#идеянедели") || chatState.getLastMessage().getText().toLowerCase().contains("#ин")) {
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setText(chatState.getLastMessage().getText());
+                sendMessage.setChatId(AkciumKicumId);
+                execute(sendMessage);
+                return;
+            }
 
             System.out.println("Get message from " + chatState.getName() + " (" + chatState.getUsername() + ")");
 
