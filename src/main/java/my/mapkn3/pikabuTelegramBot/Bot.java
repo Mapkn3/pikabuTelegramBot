@@ -23,6 +23,8 @@ public class Bot extends TelegramLongPollingBot {
     private boolean isActive;
 
     private Long AkciumKicumId = 255621638L;
+    private Integer ArtemiyId = 413561670;
+    private Integer PikaCG_botId= 1069351518;
 
     private enum TYPE {
         SIMPLE,
@@ -57,12 +59,12 @@ public class Bot extends TelegramLongPollingBot {
             System.out.println(message.getFrom().getUserName()+": "+message.getFrom().getId());
             if (message.isReply()) {
                 Message replyToMessage = message.getReplyToMessage();
-                if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getUserName().equals("PikaCG_bot")) {
+                if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getId().equals(PikaCG_botId)) {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setText(message.getText());
-                    sendMessage.setReplyToMessageId(chatState.getLastMessageForUser(0).getMessageId());
+                    sendMessage.setReplyToMessageId(chatState.getLastMessageForUser(ArtemiyId).getMessageId());
                     sendMessage.setChatId(message.getChatId());
-                    //execute(sendMessage);
+                    execute(sendMessage);
                 }
             }
             /*if (chatState.getLastMessage().hasText()) {
@@ -142,11 +144,8 @@ public class Bot extends TelegramLongPollingBot {
                     deleteMessage(chatState.getLastMessage());
                 }
             }*/
-        }/* catch (TelegramApiException e) {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
-        }*/
-        finally {
-            System.out.println("`");
         }
     }
 
