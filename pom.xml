@@ -10,8 +10,7 @@
     <packaging>jar</packaging>
 
     <name>pikabu-telegram-bot</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://github.com/Mapkn3/pikabuTelegramBot</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,7 +29,7 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
-            <version>4.1.2</version>
+            <version>4.4.0.1</version>
         </dependency>
     </dependencies>
 

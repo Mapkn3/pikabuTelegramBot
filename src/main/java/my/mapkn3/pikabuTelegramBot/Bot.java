@@ -1,13 +1,19 @@
 package my.mapkn3.pikabuTelegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.*;
+import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Bot extends TelegramLongPollingBot {
     private String botUsername;
@@ -47,7 +53,19 @@ public class Bot extends TelegramLongPollingBot {
         try {
             chatState = chatState.updateChatState(update);
 
-            if (chatState.getLastMessage().hasText()) {
+            Message message = chatState.getLastMessage();
+            System.out.println(message.getFrom().getUserName()+": "+message.getFrom().getId());
+            if (message.isReply()) {
+                Message replyToMessage = message.getReplyToMessage();
+                if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getUserName().equals("PikaCG_bot")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setText(message.getText());
+                    sendMessage.setReplyToMessageId(chatState.getLastMessageForUser(0).getMessageId());
+                    sendMessage.setChatId(message.getChatId());
+                    //execute(sendMessage);
+                }
+            }
+            /*if (chatState.getLastMessage().hasText()) {
                 if (chatState.getLastMessage().getText().toLowerCase().contains("#идеянедели") || chatState.getLastMessage().getText().toLowerCase().contains("#ин")) {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setText(chatState.getLastMessage().getText());
@@ -123,9 +141,12 @@ public class Bot extends TelegramLongPollingBot {
                 if (isDelete) {
                     deleteMessage(chatState.getLastMessage());
                 }
-            }
-        } catch (TelegramApiException e) {
+            }*/
+        }/* catch (TelegramApiException e) {
             e.printStackTrace();
+        }*/
+        finally {
+            System.out.println("`");
         }
     }
 
@@ -170,118 +191,6 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return botApiToken;
-    }
-
-    public class ChatState {
-        private Long chatId;
-        private Message lastMessage;
-        private String hashtag;
-        private String author;
-        private boolean changeHashtag;
-
-        public ChatState() {
-            chatId = 0L;
-            lastMessage = null;
-            hashtag = "";
-            author = "";
-            changeHashtag = false;
-        }
-
-        public ChatState(Update update) {
-            lastMessage = update.getMessage();
-            chatId = lastMessage.getChatId();
-            hashtag = "";
-            author = "";
-            changeHashtag = false;
-        }
-
-        public Long getChatId() {
-            return chatId;
-        }
-
-        public Message getLastMessage() {
-            return lastMessage;
-        }
-
-        public String getHashtag() {
-            return hashtag;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public boolean isChangeHashtag() {
-            return changeHashtag;
-        }
-
-        public ChatState updateChatState(Update update) {
-            changeHashtag = false;
-
-            lastMessage = getMessageFromUpdate(update);
-            chatId = lastMessage.getChatId();
-
-            String description = getTextContent();
-            if (!description.trim().isEmpty() && description.charAt(0) == '#' && description.length() > 1 && !(description.toLowerCase().contains("#идеянедели") || description.toLowerCase().contains("#ин"))) {
-                hashtag = description;
-                if (getUsername().equals("unknown")) {
-                    author = getName();
-                } else {
-                    author = getUsername();
-                }
-                changeHashtag = true;
-                System.out.println("Hashtag change to " + hashtag + " from " + author);
-            }
-            return this;
-        }
-
-        public boolean fromAuthor() {
-            return author.equals(getUsername()) || author.equals(getName());
-        }
-
-        public Message getMessageFromUpdate(Update update) {
-            Message message = update.getMessage();
-            if (message == null) {
-                message = update.getEditedMessage();
-            }
-            return message;
-        }
-
-        public String getUsername() {
-            String username = "unknown";
-            if (lastMessage.getFrom().getUserName() != null) {
-                username = "@" + lastMessage.getFrom().getUserName();
-            }
-            return username;
-        }
-
-        public String getName() {
-            String name = "unknown";
-            String lastName = lastMessage.getFrom().getLastName();
-            String firstName = lastMessage.getFrom().getFirstName();
-            if (lastName != null && firstName != null) {
-                name = lastName + " " + firstName;
-            } else {
-                if (lastName != null) {
-                    name = lastName;
-                }
-                if (firstName != null) {
-                    name = firstName;
-                }
-            }
-            return name;
-        }
-
-        public String getTextContent() {
-            String textContent = "";
-            if (lastMessage.getCaption() != null) {
-                textContent = lastMessage.getCaption();
-            }
-            if (lastMessage.hasText()) {
-                textContent = lastMessage.getText();
-            }
-            return textContent;
-        }
     }
 }
 
