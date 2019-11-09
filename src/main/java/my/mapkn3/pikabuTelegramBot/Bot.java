@@ -1,19 +1,13 @@
 package my.mapkn3.pikabuTelegramBot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Bot extends TelegramLongPollingBot {
     private String botUsername;
@@ -24,17 +18,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private Long AkciumKicumId = 255621638L;
     private Integer ArtemiyId = 413561670;
-    private Integer PikaCG_botId= 1069351518;
-
-    private enum TYPE {
-        SIMPLE,
-        HASHTAG,
-        IMAGE,
-        GIF,
-        DOCUMENT,
-        VIDEO,
-        URL
-    }
+    private Integer PikaCG_botId = 1069351518;
 
     public Bot() {
         this.chatState = new ChatState();
@@ -192,6 +176,16 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return botApiToken;
+    }
+
+    private enum TYPE {
+        SIMPLE,
+        HASHTAG,
+        IMAGE,
+        GIF,
+        DOCUMENT,
+        VIDEO,
+        URL
     }
 }
 
