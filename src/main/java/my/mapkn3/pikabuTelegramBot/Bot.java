@@ -42,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
             Message message = chatState.getLastMessage();
             if (message.isReply()) {
                 Message replyToMessage = message.getReplyToMessage();
-                if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getId().equals(PikaCG_botId)) {
+                if (replyToMessage.getFrom().getId().equals(PikaCG_botId) && message.getText().contains("+")) {
                     Message lastMessageFromArtemiy = chatState.getLastMessageForUser(ArtemiyId);
                     if (lastMessageFromArtemiy != null) {
                         SendMessage sendMessage = new SendMessage();
