@@ -59,11 +59,14 @@ public class Bot extends TelegramLongPollingBot {
             if (message.isReply()) {
                 Message replyToMessage = message.getReplyToMessage();
                 if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getId().equals(PikaCG_botId)) {
-                    SendMessage sendMessage = new SendMessage();
-                    sendMessage.setText(message.getText());
-                    sendMessage.setReplyToMessageId(chatState.getLastMessageForUser(ArtemiyId).getMessageId());
-                    sendMessage.setChatId(message.getChatId());
-                    execute(sendMessage);
+                    Message lastMessageFromArtemiy = chatState.getLastMessageForUser(ArtemiyId);
+                    if (lastMessageFromArtemiy != null) {
+                        SendMessage sendMessage = new SendMessage();
+                        sendMessage.setText(message.getText());
+                        sendMessage.setReplyToMessageId(lastMessageFromArtemiy.getMessageId());
+                        sendMessage.setChatId(message.getChatId());
+                        execute(sendMessage);
+                    }
                 }
             }
             /*if (chatState.getLastMessage().hasText()) {
