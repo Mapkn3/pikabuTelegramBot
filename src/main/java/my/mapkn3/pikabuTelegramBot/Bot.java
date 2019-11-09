@@ -56,7 +56,6 @@ public class Bot extends TelegramLongPollingBot {
             chatState = chatState.updateChatState(update);
 
             Message message = chatState.getLastMessage();
-            System.out.println(message.getFrom().getUserName()+": "+message.getFrom().getId());
             if (message.isReply()) {
                 Message replyToMessage = message.getReplyToMessage();
                 if (replyToMessage.getFrom().getBot() && replyToMessage.getFrom().getId().equals(PikaCG_botId)) {
